@@ -1,0 +1,15 @@
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\bin\Debug\SimpleScript.Interpreter.exe
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\bin\Debug\SimpleScript.Interpreter.pdb
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\obj\x86\Debug\SimpleScript.Interpreter.exe
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\obj\x86\Debug\SimpleScript.Interpreter.pdb
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\bin\Debug\QUT.ShiftReduceParser.dll
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\bin\Debug\SimpleScript.Analyzing.dll
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\bin\Debug\SimpleScript.RunTime.dll
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\bin\Debug\SimpleScript.Analyzing.pdb
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\bin\Debug\SimpleScript.RunTime.pdb
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Interpreter\bin\Debug\GCD_Example.ss
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Interpreter\obj\x86\Debug\SimpleScript.Interpreter.csprojResolveAssemblyReference.cache
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Interpreter\obj\x86\Debug\SimpleScript.Interpreter.csproj.CoreCompileInputs.cache
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Interpreter\obj\x86\Debug\SimpleScript.Interpreter.exe
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Interpreter\obj\x86\Debug\SimpleScript.Interpreter.pdb

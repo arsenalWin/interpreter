@@ -1,0 +1,304 @@
+
+// ==========================================================================
+//  GPLEX error listing for lex source file <SimpleScriptScaner.lex>
+// ==========================================================================
+//  Version:  1.2.2
+//  Machine:  小兰
+//  DateTime: 2017/12/3 23:26:32
+//  UserName: stern
+// ==========================================================================
+
+
+%using SimpleScript.RunTime;
+// Error: Too many errors
+// Error: Too many errors, abandoning
+// ----------------------------------
+
+%namespace SimpleScript.Analyzing
+
+%option stack, minimize, parser, verbose, persistbuffer, unicode, compressNext, embedbuffers
+
+%{
+public void yyerror(string format, params object[] args) // remember to add override back
+{
+	System.Console.Error.WriteLine("Error: line {0} - " + format, yyline);
+}
+%}
+// Single comments
+LineComment	!.*
+
+//Base Definitions
+D		[0-9]
+AZ		[a-zA-Z]
+AZex 	[a-zA-Z0-9_]+
+//Literals
+IntegerLiteral	{D}+
+DoubleLiteral	{D}+(\.{D}+)?
+BooleanLiteral	(ON|OFF)
+ProgramName		([a-zA-Z]([a-zA-Z0-9_])*)
+
+//Spaces and End of Line
+WhiteSpace		[ \t]
+Eol				(\r\n?|\n)
+
+//move type
+Joint		J
+Linear		L
+Circular	C
+
+//welding
+Arc			Arc
+Start		Start
+Weave		Weave
+
+//var
+Register	R
+PosRegister	PR
+Dout		DO
+Din			DI
+
+//
+Fine		FINE
+Cnt			CNT
+Wjnt		WJNT
+Offset		offset
+Condition	CONDITION
+Skip		SKIP
+Acc			ACC
+Sec			sec
+Label		LBL
+Jump		JMP
+Call		CALL
+Pulse		Pulse
+End			END
+If			IF
+Select		SELECT
+Else		ELSE
+
+//speed
+Percent		"%"
+MmSec		"mm/sec"
+CmMin		"cm/min"
+InchMin		"inch/min"
+DegSec		"deg/sec"
+
+
+OpAssign	=
+OpAdd		+
+OpMinus		"-"
+OpMul		"*"
+OpChu		"/"
+OpMod		MOD
+OpDiv		DIV
+LeftPar		"("
+RightPar	")"
+LeftBra		"["
+RightBra	"]"
+OpAnd		and
+OpOr		or
+OpEqu		"=="
+OpNotEqu	"<>"
+OpLt		"<"
+OpGt		">"
+OpGtEq		">="
+OpLtEq		"<="
+
+
+// The states into which this FSA can pass.
+%x CMMT		// Inside a comment.
+%%
+
+//
+// Start of Rules
+//
+
+
+// Remove whitespaces.
+{WhiteSpace}+	{ ; }
+
+// End of Line (Haven't yet figured it how to do this :-) )
+{Eol}+		{ return (int) Tokens.EOL; }
+
+// Remove these lines 
+{LineComment}+					{yy_push_state (CMMT);}//return (int) Tokens.COMMENT; }
+<CMMT>{
+{Eol} { yy_pop_state ();}
+}
+
+{IntegerLiteral}				{ Int64.TryParse (yytext, NumberStyles.Integer, CultureInfo.CurrentCulture, out yylval.Integer);
+								return (int) Tokens.INTEGER_LITERAL; }
+
+{DoubleLiteral}					{ double.TryParse (yytext, NumberStyles.Float, CultureInfo.CurrentCulture, out yylval.Double); 
+								return (int) Tokens.DOUBLE_LITERAL; }
+
+{BooleanLiteral}				{ if(yytext == "ON") {yylval.Bool =	true;}
+								else {yylval.Bool =	false;}
+								return (int) Tokens.BOOL_LITERAL; }
+
+{ProgramName}					{ yylval.String = yytext; 
+//^^^^^^^^^^^
+// Warning: This pattern always overrides "{Acc}" 
+// Warning: This pattern always overrides "{Skip}" 
+// Warning: This pattern always overrides "{Label}" 
+// Warning: This pattern always overrides "{Sec}" 
+// Warning: This pattern always overrides "{Condition}" 
+// Warning: This pattern always overrides "{Cnt}" 
+// Warning: This pattern always overrides "{Fine}" 
+// Warning: This pattern always overrides "{Offset}" 
+// Warning: This pattern always overrides "{Wjnt}" 
+// Warning: This pattern always overrides "{Else}" 
+// Warning: This pattern always overrides "{Select}" 
+// Warning: This pattern always overrides "{Joint}" 
+// Error: Too many errors, abandoning
+// Warning: This pattern always overrides "{If}" 
+// Warning: This pattern always overrides "{Call}" 
+// Warning: This pattern always overrides "{Jump}" 
+// Warning: This pattern always overrides "{End}" 
+// Warning: This pattern always overrides "{Pulse}" 
+// Warning: This pattern always overrides "{Register}" 
+// Warning: This pattern always overrides "{Dout}" 
+// Warning: This pattern always overrides "{Start}" 
+// Warning: This pattern always overrides "{Weave}" 
+// Warning: This pattern always overrides "{PosRegister}" 
+// Warning: This pattern always overrides "{Arc}" 
+// Warning: This pattern always overrides "{Linear}" 
+// Warning: This pattern always overrides "{Din}" 
+// Warning: This pattern always overrides "{Circular}" 
+// -------------------------------------------------------
+								return (int) Tokens.PROGRAM_NAME; }
+
+{Joint}		{ return (int) Tokens.JOINT; }
+//^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Linear}	{ return (int) Tokens.LINEAR; }
+//^^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Circular}	{ return (int) Tokens.CIRCULAR; }
+//^^^^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+
+{Arc}		{ return (int) Tokens.ARC; }
+//^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Start}		{ return (int) Tokens.START; }
+//^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Weave}		{ return (int) Tokens.WEAVE; }
+//^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+
+{Register}		{ return (int) Tokens.REGISTER; }
+//^^^^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{PosRegister}	{ return (int) Tokens.POS_REGISTER; }
+//^^^^^^^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Dout}			{ return (int) Tokens.DOUT; }
+//^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Din}			{ return (int) Tokens.DIN; }
+//^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+
+{Percent}		{ return (int) Tokens.PERCENT; }
+{MmSec}			{ return (int) Tokens.MM_SEC; }
+{CmMin}			{ return (int) Tokens.CM_MIN; }
+{InchMin}		{ return (int) Tokens.INCH_MIN; }
+{DegSec}		{ return (int) Tokens.DEG_SEC; }
+
+{Fine}			{ return (int) Tokens.FINE; }
+//^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Cnt}			{ return (int) Tokens.CNT; }
+//^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Wjnt}			{ return (int) Tokens.WJINT; }
+//^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Offset}		{ return (int) Tokens.OFFSET; }
+//^^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Condition}		{ return (int) Tokens.CONDITION; }
+//^^^^^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Skip}			{ return (int) Tokens.SKIP; }
+//^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Acc}			{ return (int) Tokens.ACC; }
+//^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Sec}			{ return (int) Tokens.SEC; }
+//^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Label}			{ return (int) Tokens.LABEL; }
+//^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Jump}			{ return (int) Tokens.JUMP; }
+//^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Call}			{ return (int) Tokens.CALL; }
+//^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Pulse}			{ return (int) Tokens.PULSE; }
+//^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{End}			{ return (int) Tokens.END; }
+//^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{If}			{ return (int) Tokens.IF; }
+//^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Select}		{ return (int) Tokens.SELECT; }
+//^^^^^^
+// Warning: This pattern always overridden by "{ProgramName}" 
+// -----------------------------------------------------------
+{Else}			{ return (int) Tokens.ELSE; }
+
+{OpAssign}	{ return (int) Tokens.OP_ASSIGN; }
+{OpAdd}		{ return (int) Tokens.OP_ADD; }
+{OpMinus}	{ return (int) Tokens.OP_MINUS; }
+{OpMul}		{ return (int) Tokens.OP_MUL; }
+{OpDiv}		{ return (int) Tokens.OP_DIV; }
+{OpChu}		{ return (int) Tokens.OP_CHU; }
+{OpMod}		{ return (int) Tokens.OP_MOD; }
+{LeftPar}	{ return (int) Tokens.OP_LEFT_PAR; }
+{RightPar}	{ return (int) Tokens.OP_RIGHT_PAR; }
+{LeftBra}	{ return (int) Tokens.OP_LEFT_BRA; }
+{RightBra}	{ return (int) Tokens.OP_RIGHT_BRA; }
+{OpAnd}		{ return (int) Tokens.OP_AND; }
+{OpOr}		{ return (int) Tokens.OP_OR; }
+{OpEqu}		{ return (int) Tokens.OP_EQU; }
+{OpNotEqu}	{ return (int) Tokens.OP_NOT_EQU; }
+{OpLt}		{ return (int) Tokens.OP_LT; }
+{OpGt}		{ return (int) Tokens.OP_GT; }
+{OpGtEq}	{ return (int) Tokens.OP_GT_EQ; }
+{OpLtEq}	{ return (int) Tokens.OP_LT_EQ; }
+
+
+
+// ==========================================================================
+

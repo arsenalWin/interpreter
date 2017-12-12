@@ -1,0 +1,25 @@
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Analyzing\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.Analyzing.pdb
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.pdb
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Analyzing\bin\Debug\QUT.ShiftReduceParser.dll
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.RunTime.dll
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.RunTime.pdb
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.Analyzing.dll
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.dll
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.csprojResolveAssemblyReference.cache
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.csproj.CoreCompileInputs.cache
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.dll
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.pdb
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.Analyzing.dll
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.Analyzing.pdb
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.RunTime.dll
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.RunTime.pdb
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.Analyzing.dll
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.Analyzing.pdb
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.RunTime.dll
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.RunTime.pdb
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.csprojResolveAssemblyReference.cache
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.csproj.CoreCompileInputs.cache
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.dll
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\obj\Debug\SimpleScript.Analyzing.pdb
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.Analyzing\bin\Debug\SimpleScript.Analyzing.dll.config

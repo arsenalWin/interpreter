@@ -1,0 +1,17 @@
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.RunTime\bin\Debug\SimpleScript.RunTime.dll
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.RunTime\bin\Debug\SimpleScript.RunTime.pdb
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.RunTime\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.dll
+C:\Users\Tigran\documents\visual studio 2010\Projects\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.pdb
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\bin\Debug\SimpleScript.RunTime.dll
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\bin\Debug\SimpleScript.RunTime.pdb
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.csprojResolveAssemblyReference.cache
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.csproj.CoreCompileInputs.cache
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.dll
+F:\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.pdb
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\bin\Debug\SimpleScript.RunTime.dll
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\bin\Debug\SimpleScript.RunTime.pdb
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.csprojResolveAssemblyReference.cache
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.csproj.CoreCompileInputs.cache
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.dll
+D:\1 project\Scripts\simple interpreter\SimpleScript\SimpleScript.RunTime\obj\Debug\SimpleScript.RunTime.pdb

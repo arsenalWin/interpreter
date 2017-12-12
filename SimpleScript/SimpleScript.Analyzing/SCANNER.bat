@@ -1,0 +1,2 @@
+gplex "SimpleScriptScaner.lex"
+pause
