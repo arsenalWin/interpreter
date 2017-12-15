@@ -47,6 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IStatement1.cs" />
+    <Compile Include="MoveInfo.cs" />
+    <Compile Include="MoveSpeed.cs" />
+    <Compile Include="MoveTypes.cs" />
+    <Compile Include="PosInfo.cs" />
     <Compile Include="StatementList.cs" />
     <Compile Include="Statements\AssignmentStatement.cs" />
     <Compile Include="Statements\DeclerationStatement.cs" />
