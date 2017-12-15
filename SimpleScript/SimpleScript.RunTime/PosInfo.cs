@@ -13,7 +13,7 @@ namespace SimpleScript.RunTime
             
         }
 
-        private bool isHome = false;
+        //private bool isHome = false;
         private string config = "N U T, 0, 0, 0";
         private int uf = 0;
         private int ut = 1;
@@ -24,6 +24,37 @@ namespace SimpleScript.RunTime
         {
             get { return type; }
             set { type = value; }
+        }
+
+        public float J1
+        {
+            get { return j1; }
+            set { j1 = value; }
+        }
+        public float J2
+        {
+            get { return j2; }
+            set { j2 = value; }
+        }
+        public float J3
+        {
+            get { return j3; }
+            set { j3 = value; }
+        }
+        public float J4
+        {
+            get { return j4; }
+            set { j4 = value; }
+        }
+        public float J5
+        {
+            get { return j5; }
+            set { j5 = value; }
+        }
+        public float J6
+        {
+            get { return j6; }
+            set { j6 = value; }
         }
 
     }
