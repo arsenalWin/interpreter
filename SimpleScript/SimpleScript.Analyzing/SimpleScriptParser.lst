@@ -1,11 +1,11 @@
 
 // ==========================================================================
-//  GPPG error listing for yacc source file <SimpleScriptParser.y - 1/10/2011 11:06:13 PM>
+//  GPPG error listing for yacc source file <SimpleScriptParser.y - 2017/12/6 23:05:45>
 // ==========================================================================
-//  Version:  1.4.3
-//  Machine:  TIGERVAIO
-//  DateTime: 1/10/2011 11:06:14 PM
-//  UserName: Tigran
+//  Version:  1.5.2
+//  Machine:  小兰
+//  DateTime: 2017/12/14 21:41:51
+//  UserName: stern
 // ==========================================================================
 
 
@@ -17,9 +17,7 @@
 	SymbolTable symTable = SymbolTable.GetInstance;
 	public StatementList program = new StatementList();
 %}
-t
-// Error: Syntax error, unexpected ident
-// -------------------------------------
+
 %start program
 
 %union {
@@ -33,50 +31,65 @@ t
 }
 // Defining Tokens
 %token COMMENT
-%token <String>	 IDENTIFIER
+%token <String>	 PROGRAM_NAME
 %token <Integer> INTEGER_LITERAL
 %token <Double>	 DOUBLE_LITERAL
 %token <Bool>	 BOOL_LITERAL
 %token <String>	 STRING_LITERAL
 %token EOL
-%token DIM
-%token BOOL
-%token INT
-%token STRING
-%token DOUBLE
-%token AS
 
-%token BEGIN
+%token START
 %token END
 
-// I/O Statement
-%token PRINT
-%token INPUT
+// move Statement
+%token JOINT
+%token LINEAR
+%token CIRCULAR
 
-// For statement
-%token FOR
-%token TO
-%token NEXT
+//welding
+%token ARC
+%token WEAVE
 
-// While Statement
-%token WHILE
-%token DO
+//VAR
+%token REGISTER
+%token POSREGISTER
+%token DOUT
+%token DIN
 
-// If condition. 
-%token IF	
-%token THEN
+// SPEED
+%token PERCENT
+%token MM_SEC
+%token CM_MIN
+%token INCH_MIN
+%token DEG_SEC
+
+//
+%token FINE
+%token CNT
+%token WJNT
+%token OFFSET
+%token CONDITION
+%token SKIP
+%token ACC
+%token SEC
+%token LABEL
+%token JUMP
+%token CALL
+%token PULSE
+%token IF
+%token SELECT
 %token ELSE
-%left FI	
 
 %token OP_RIGHT_PAR
 %token OP_LEFT_PAR
+%token OP_LEFT_BRA
+%token OP_RIGHT_BRA
 %left OP_ASSIGN
 %left OP_ADD OP_MINUS
-%left OP_MUL OP_DIV 
-%left OP_MODUL
+%left OP_MUL OP_CHU 
+%left OP_MOD OP_DIV
 %left OP_AND
 %left OP_OR
-%left OP_NOT
 %left OP_EQU
 %left OP_NOT_EQU
 %left OP_LT
@@ -87,7 +100,70 @@ t
 
 // YACC Rules
 %%
-program			:	BEGIN EOL statementList EOL END {program = $3.statementList;}
+// Error: NonTerminal symbol "BOOL" has no productions
+// Error: NonTerminal symbol "DOUBLE" has no productions
+// Error: NonTerminal symbol "OP_MODUL" has no productions
+// Error: NonTerminal symbol "STRING" has no productions
+// Error: NonTerminal symbol "INT" has no productions
+// Error: NonTerminal symbol "DIM" has no productions
+// Error: NonTerminal symbol "BEGIN" has no productions
+// Error: NonTerminal symbol "AS" has no productions
+// Error: NonTerminal symbol "IDENTIFIER" has no productions
+// Error: NonTerminal symbol "OP_NOT" has no productions
+// Error: NonTerminal symbol "FI" has no productions
+// Error: NonTerminal symbol "THEN" has no productions
+// Error: NonTerminal symbol "DO" has no productions
+// Error: NonTerminal symbol "WHILE" has no productions
+// Error: NonTerminal symbol "NEXT" has no productions
+// Error: NonTerminal symbol "INPUT" has no productions
+// Error: NonTerminal symbol "PRINT" has no productions
+// Error: NonTerminal symbol "TO" has no productions
+// Error: NonTerminal symbol "FOR" has no productions
+// Warning: Terminating DO fixes the following size-1 NonTerminal set
+   // {DO}
+// Warning: Terminating DOUBLE fixes the following size-1 NonTerminal set
+   // {DOUBLE}
+// Warning: Terminating INT fixes the following size-1 NonTerminal set
+   // {INT}
+// Warning: Terminating STRING fixes the following size-1 NonTerminal set
+   // {STRING}
+// Warning: Terminating BOOL fixes the following size-1 NonTerminal set
+   // {BOOL}
+// Warning: Terminating AS fixes the following size-1 NonTerminal set
+   // {AS}
+// Warning: Terminating BEGIN fixes the following size-3 NonTerminal set
+   // {program, $accept, BEGIN}
+// Error: There are 29 non-terminating NonTerminal Symbols
+   //  {program, $accept, BEGIN, statement, varDecl, assignOp, printOp, inputOp, 
+   //     forLoop, ifCond, whileLoop, DIM, IDENTIFIER, AS, INT, DOUBLE, BOOL, 
+   //     STRING, OP_MODUL, OP_NOT, PRINT, INPUT, FOR, TO, NEXT, THEN, FI, WHILE, 
+   //     DO}
+// Warning: Terminating IDENTIFIER fixes the following size-3 NonTerminal set
+   // {statement, assignOp, IDENTIFIER}
+// Warning: Terminating DIM fixes the following size-1 NonTerminal set
+   // {DIM}
+// Warning: Terminating OP_MODUL fixes the following size-1 NonTerminal set
+   // {OP_MODUL}
+// Warning: Terminating THEN fixes the following size-1 NonTerminal set
+   // {THEN}
+// Warning: Terminating NEXT fixes the following size-1 NonTerminal set
+   // {NEXT}
+// Warning: Terminating WHILE fixes the following size-1 NonTerminal set
+   // {WHILE}
+// Warning: Terminating FI fixes the following size-1 NonTerminal set
+   // {FI}
+// Warning: Terminating TO fixes the following size-1 NonTerminal set
+   // {TO}
+// Warning: Terminating PRINT fixes the following size-3 NonTerminal set
+   // {statement, printOp, PRINT}
+// Warning: Terminating OP_NOT fixes the following size-1 NonTerminal set
+   // {OP_NOT}
+// Warning: Terminating FOR fixes the following size-1 NonTerminal set
+   // {FOR}
+// Warning: Terminating INPUT fixes the following size-1 NonTerminal set
+   // {INPUT}
+// -------------------------------------------------------------------------------
+program			:	BEGIN EOL statementList EOL OP_LEFT_BRA END OP_RIGHT_BRA	{program = $3.statementList;}
 				;
 
 statementList	:	/*Empty*/	{if($$.statementList == null)	{$$.statementList = new StatementList();}}
@@ -99,7 +175,7 @@ statementList	:	/*Empty*/	{if($$.statementList == null)	{$$.statementList = new 
 				|	statementList EOL statement	{ $1.statementList.Add($3.statement); $$.statementList = $1.statementList; }
 				;
 			
-
+//ÔË¶¯Ö¸Áî º¸½ÓÖ¸Áî I/OÖ¸Áî LABELÖ¸Áî JUMPÖ¸Áî CALLÖ¸Áî IFÖ¸Áî SELECTÖ¸Áî WAITÖ¸Áî OFFSETÖ¸Áî PAUSEÖ¸Áî
 statement	:	varDecl		{ $$.statement = $1.statement; }
 			|	assignOp	{ $$.statement = $1.statement; }
 			|	printOp		{ $$.statement = $1.statement; }

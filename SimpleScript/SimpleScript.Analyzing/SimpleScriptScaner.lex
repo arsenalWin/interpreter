@@ -19,13 +19,17 @@ AZ		[a-zA-Z]
 AZex 	[a-zA-Z0-9_]+
 //Literals
 IntegerLiteral	{D}+
-DoubleLiteral	{D}+(\.{D}+)?
+DoubleLiteral	-?{D}+(\.{D}+)?
 BooleanLiteral	(ON|OFF)
+StringLiteral	'.*'
 ProgramName		([a-zA-Z]([a-zA-Z0-9_])*)
 
 //Spaces and End of Line
 WhiteSpace		[ \t]
 Eol				(\r\n?|\n)
+Semi			;
+Colon			:
+Comma			,
 
 //move type
 Joint		J
@@ -47,7 +51,7 @@ Din			DI
 Fine		FINE
 Cnt			CNT
 Wjnt		WJNT
-Offset		offset
+Offset		OFFSET
 Condition	CONDITION
 Skip		SKIP
 Acc			ACC
@@ -56,10 +60,13 @@ Label		LBL
 Jump		JMP
 Call		CALL
 Pulse		Pulse
-End			END
 If			IF
 Select		SELECT
 Else		ELSE
+Prog		/PROG
+Main		/MN
+Pos			/POS
+End			/END
 
 //speed
 Percent		"%"
@@ -70,7 +77,7 @@ DegSec		"deg/sec"
 
 
 OpAssign	=
-OpAdd		+
+OpAdd		"+"
 OpMinus		"-"
 OpMul		"*"
 OpChu		"/"
@@ -80,6 +87,8 @@ LeftPar		"("
 RightPar	")"
 LeftBra		"["
 RightBra	"]"
+LeftBig		"{"
+RightBig	"}"
 OpAnd		and
 OpOr		or
 OpEqu		"=="
@@ -89,9 +98,34 @@ OpGt		">"
 OpGtEq		">="
 OpLtEq		"<="
 
+//POS
+Home		HOME
+Pos			P\[{D}+.*\]
+Group		GP1
+Deg			deg
+Mm			mm
+Ut			UT
+Uf			UF
+Config		CONFIG
+J1			J1
+J2			J2
+J3			J3
+J4			J4
+J5			J5
+J6			J6
+X			X
+Y			Y
+Z			Z
+W			W
+P			P
+
+
+
+
 
 // The states into which this FSA can pass.
 %x CMMT		// Inside a comment.
+%x CMMT2
 %%
 
 //
@@ -112,6 +146,8 @@ OpLtEq		"<="
 {Eol} { yy_pop_state ();}
 }
 
+
+
 {IntegerLiteral}				{ Int64.TryParse (yytext, NumberStyles.Integer, CultureInfo.CurrentCulture, out yylval.Integer);
 								return (int) Tokens.INTEGER_LITERAL; }
 
@@ -121,6 +157,9 @@ OpLtEq		"<="
 {BooleanLiteral}				{ if(yytext == "ON") {yylval.Bool =	true;}
 								else {yylval.Bool =	false;}
 								return (int) Tokens.BOOL_LITERAL; }
+{StringLiteral}					{ if (yytext.Length > 2) { yylval.String = yytext.Substring(1, yytext.Length - 2); }
+									else { yylval.String = ""; }
+								return (int) Tokens.STRING_LITERAL; }
 
 {Joint}		{ return (int) Tokens.JOINT; }
 {Linear}	{ return (int) Tokens.LINEAR; }
@@ -177,6 +216,8 @@ OpLtEq		"<="
 {OpGt}		{ return (int) Tokens.OP_GT; }
 {OpGtEq}	{ return (int) Tokens.OP_GT_EQ; }
 {OpLtEq}	{ return (int) Tokens.OP_LT_EQ; }
+{Pos}		{if(yytext.Contains("\"HOME\"")) { yylval.String = yytext.Replace("\"HOME\"","HOME"); } 
+			return (int) Tokens.Pos; }
 
 {ProgramName}					{ yylval.String = yytext; 
 								return (int) Tokens.PROGRAM_NAME; }
