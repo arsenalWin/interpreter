@@ -44,7 +44,7 @@
 
 //VAR
 %token REGISTER
-%token POSREGISTER
+%token POS_REGISTER
 %token DOUT
 %token DIN
 
@@ -64,7 +64,6 @@
 %token IF
 %token SELECT
 %token ELSE
-%token PROG
 %token MAIN
 %token POS_
 %token END
@@ -134,7 +133,7 @@ statementList	:	/*Empty*/	{if($$.statementList == null)	{$$.statementList = new 
 statement	:	moveStatement		{ $$.statement = $1.statement; }
 			;
 
-moveStatement	:	J POS moveSpeed moveFine SEMI	{$$.statement = new MoveStatement(MoveTypes.Joint, $2, $3.moveSpeed);}
+moveStatement	:	JOINT POS moveSpeed moveFine SEMI	{$$.statement = new MoveStatement(MoveTypes.Joint, $2, $3.moveSpeed);}
 				;
 
 moveSpeed		:	INTEGER_LITERAL PERCENT	{$$.moveSpeed = new MoveSpeed($1, "percent");}
@@ -153,8 +152,8 @@ posInfoList	:	/*Empty*/
 			|	posInfoList EOL posInfo
 			;
 
-posInfo		:	POS OP_LEFT_BIG EOL CROUP COLON EOL UF COLON INTEGER_LITERAL COMMA UT COLON INTEGER_LITERAL COMMA EOL    //15
-				J1 OP_ASSIGN DOUBLE_LITERAL DEG COMMA J2 OP_ASSIGN DOUBLE_LITERAL DEG COMMA J3 OP_ASSIGN DOUBLE_LITERAL DEG COMMA EOL	//31
+posInfo		:	POS OP_LEFT_BIG EOL GROUP COLON EOL UF COLON INTEGER_LITERAL COMMA UT COLON INTEGER_LITERAL COMMA EOL 
+				J1 OP_ASSIGN DOUBLE_LITERAL DEG COMMA J2 OP_ASSIGN DOUBLE_LITERAL DEG COMMA J3 OP_ASSIGN DOUBLE_LITERAL DEG COMMA EOL
 			    J4 OP_ASSIGN DOUBLE_LITERAL DEG COMMA J5 OP_ASSIGN DOUBLE_LITERAL DEG COMMA J6 OP_ASSIGN DOUBLE_LITERAL DEG EOL
 				OP_LEFT_BIG SEMI
 				{ int yId = symTable.Add($1); symTable.SetType(yId, SimpleScriptTypes.PosInfo); 

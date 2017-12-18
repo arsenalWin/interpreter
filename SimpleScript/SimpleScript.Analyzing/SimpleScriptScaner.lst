@@ -4,7 +4,7 @@
 // ==========================================================================
 //  Version:  1.2.2
 //  Machine:  小兰
-//  DateTime: 2017/12/17 21:47:10
+//  DateTime: 2017/12/18 23:35:09
 //  UserName: stern
 // ==========================================================================
 
@@ -23,8 +23,6 @@ public void yyerror(string format, params object[] args) // remember to add over
 %}
 // Single comments
 LineComment		!.*
-AttributeStart	\/PROG
-AttributeEnd	\/MN
 
 //Base Definitions
 D		[0-9]
@@ -160,13 +158,13 @@ P			P
 <CMMT>{
 {Eol} { yy_pop_state ();}
 }
-{AttributeStart}					{  yy_push_state (ATTR); }
-//^^^^^^^^^^^^^^
+{Prog}					{  yy_push_state (ATTR); }
+//^^^^
 // Warning: This pattern always overrides "{Prog}" 
 // ------------------------------------------------
 <ATTR>{
 	[.*\n]+				{; }
-	{AttributeEnd}		{ yy_pop_state(); }
+	{Main}				{ yy_pop_state(); return (int) Tokens.BEGIN; }
 	<<EOF>>				{ ; /* raise an error. */ }
 }
 
@@ -215,7 +213,6 @@ P			P
 {Jump}			{ return (int) Tokens.JUMP; }
 {Call}			{ return (int) Tokens.CALL; }
 {Pulse}			{ return (int) Tokens.PULSE; }
-{End}			{ return (int) Tokens.END; }
 {If}			{ return (int) Tokens.IF; }
 {Select}		{ return (int) Tokens.SELECT; }
 {Else}			{ return (int) Tokens.ELSE; }
@@ -223,8 +220,9 @@ P			P
 {Main}			{ return (int) Tokens.MAIN; }
 {Prog}			{ return (int) Tokens.PROG; }
 //^^^^
-// Warning: This pattern always overridden by "{AttributeStart}" 
-// --------------------------------------------------------------
+// Warning: This pattern always overridden by "{Prog}" 
+// ----------------------------------------------------
+{End}			{ return (int) Tokens.END; }
 
 {OpAssign}	{ return (int) Tokens.OP_ASSIGN; }
 {OpAdd}		{ return (int) Tokens.OP_ADD; }
@@ -245,6 +243,8 @@ P			P
 {OpGt}		{ return (int) Tokens.OP_GT; }
 {OpGtEq}	{ return (int) Tokens.OP_GT_EQ; }
 {OpLtEq}	{ return (int) Tokens.OP_LT_EQ; }
+{LeftBig}	{ return (int) Tokens.OP_LEFT_BIG; }
+{RightBig}	{ return (int) Tokens.OP_RIGHT_BIG; }
 
 {Pos}		{ if(yytext.Contains("\"HOME\"")) { yylval.String = yytext.Replace("\"HOME\"","HOME"); } 
 			return (int) Tokens.POS; }

@@ -12,8 +12,6 @@ public void yyerror(string format, params object[] args) // remember to add over
 %}
 // Single comments
 LineComment		!.*
-AttributeStart	\/PROG
-AttributeEnd	\/MN
 
 //Base Definitions
 D		[0-9]
@@ -149,10 +147,10 @@ P			P
 <CMMT>{
 {Eol} { yy_pop_state ();}
 }
-{AttributeStart}					{  yy_push_state (ATTR); }
+{Prog}					{  yy_push_state (ATTR); }
 <ATTR>{
 	[.*\n]+				{; }
-	{AttributeEnd}		{ yy_pop_state(); return (int) Tokens.BEGIN; }
+	{Main}				{ yy_pop_state(); return (int) Tokens.BEGIN; }
 	<<EOF>>				{ ; /* raise an error. */ }
 }
 
@@ -191,7 +189,7 @@ P			P
 
 {Fine}			{ return (int) Tokens.FINE; }
 {Cnt}			{ return (int) Tokens.CNT; }
-{Wjnt}			{ return (int) Tokens.WJINT; }
+{Wjnt}			{ return (int) Tokens.WJNT; }
 {Offset}		{ return (int) Tokens.OFFSET; }
 {Condition}		{ return (int) Tokens.CONDITION; }
 {Skip}			{ return (int) Tokens.SKIP; }
@@ -206,7 +204,6 @@ P			P
 {Else}			{ return (int) Tokens.ELSE; }
 {Pos_}			{ return (int) Tokens.POS_; }
 {Main}			{ return (int) Tokens.MAIN; }
-{Prog}			{ return (int) Tokens.PROG; }
 {End}			{ return (int) Tokens.END; }
 
 {OpAssign}	{ return (int) Tokens.OP_ASSIGN; }
