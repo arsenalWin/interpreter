@@ -79,6 +79,11 @@ namespace SimpleScript.RunTime
                     SymbolTableStringElement stse = new SymbolTableStringElement(x.Name, "");
                     symbolTable[id] = stse;
                     break;
+                case SimpleScriptTypes.PosInfo:
+                    SymbolTablePosElement stpe = new SymbolTablePosElement(x.Name, new PosInfo(x.Name));
+                    symbolTable[id] = stpe;
+                    break;
+
             }
         }
 

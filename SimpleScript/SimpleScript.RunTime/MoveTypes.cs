@@ -5,10 +5,10 @@ using System.Text;
 
 namespace SimpleScript.RunTime
 {
-    public interface IStatement
+    public enum MoveTypes
     {
-        //ToDo: statement 接口需要修改
-        string Print();
-        void Execute();
+        Joint,
+        Line,
+        Circle
     }
 }

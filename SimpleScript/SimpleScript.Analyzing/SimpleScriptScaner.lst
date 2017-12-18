@@ -4,15 +4,12 @@
 // ==========================================================================
 //  Version:  1.2.2
 //  Machine:  小兰
-//  DateTime: 2017/12/3 23:26:32
+//  DateTime: 2017/12/17 21:47:10
 //  UserName: stern
 // ==========================================================================
 
 
 %using SimpleScript.RunTime;
-// Error: Too many errors
-// Error: Too many errors, abandoning
-// ----------------------------------
 
 %namespace SimpleScript.Analyzing
 
@@ -25,7 +22,9 @@ public void yyerror(string format, params object[] args) // remember to add over
 }
 %}
 // Single comments
-LineComment	!.*
+LineComment		!.*
+AttributeStart	\/PROG
+AttributeEnd	\/MN
 
 //Base Definitions
 D		[0-9]
@@ -33,13 +32,17 @@ AZ		[a-zA-Z]
 AZex 	[a-zA-Z0-9_]+
 //Literals
 IntegerLiteral	{D}+
-DoubleLiteral	{D}+(\.{D}+)?
+DoubleLiteral	-?{D}+(\.{D}+)?
 BooleanLiteral	(ON|OFF)
+StringLiteral	'.*'
 ProgramName		([a-zA-Z]([a-zA-Z0-9_])*)
 
 //Spaces and End of Line
 WhiteSpace		[ \t]
 Eol				(\r\n?|\n)
+Semi			;
+Colon			:
+Comma			,
 
 //move type
 Joint		J
@@ -61,7 +64,7 @@ Din			DI
 Fine		FINE
 Cnt			CNT
 Wjnt		WJNT
-Offset		offset
+Offset		OFFSET
 Condition	CONDITION
 Skip		SKIP
 Acc			ACC
@@ -70,10 +73,13 @@ Label		LBL
 Jump		JMP
 Call		CALL
 Pulse		Pulse
-End			END
 If			IF
 Select		SELECT
 Else		ELSE
+Prog		/PROG
+Main		/MN
+Pos_		/POS
+End			/END
 
 //speed
 Percent		"%"
@@ -84,7 +90,7 @@ DegSec		"deg/sec"
 
 
 OpAssign	=
-OpAdd		+
+OpAdd		"+"
 OpMinus		"-"
 OpMul		"*"
 OpChu		"/"
@@ -94,6 +100,8 @@ LeftPar		"("
 RightPar	")"
 LeftBra		"["
 RightBra	"]"
+LeftBig		"{"
+RightBig	"}"
 OpAnd		and
 OpOr		or
 OpEqu		"=="
@@ -103,9 +111,33 @@ OpGt		">"
 OpGtEq		">="
 OpLtEq		"<="
 
+//POS
+Pos			P\[{D}+.*\]
+Group		GP1
+Deg			deg
+Mm			mm
+Ut			UT
+Uf			UF
+Config		CONFIG
+J1			J1
+J2			J2
+J3			J3
+J4			J4
+J5			J5
+J6			J6
+X			X
+Y			Y
+Z			Z
+W			W
+P			P
+
+
+
+
 
 // The states into which this FSA can pass.
 %x CMMT		// Inside a comment.
+%x ATTR
 %%
 
 //
@@ -118,12 +150,26 @@ OpLtEq		"<="
 
 // End of Line (Haven't yet figured it how to do this :-) )
 {Eol}+		{ return (int) Tokens.EOL; }
+{Semi}		{ return (int) Tokens.SEMI; }
+{Colon}		{ return (int) Tokens.COLON; }
+{Comma}		{ return (int) Tokens.COMMA; }
 
 // Remove these lines 
+// TODO: show these lines
 {LineComment}+					{yy_push_state (CMMT);}//return (int) Tokens.COMMENT; }
 <CMMT>{
 {Eol} { yy_pop_state ();}
 }
+{AttributeStart}					{  yy_push_state (ATTR); }
+//^^^^^^^^^^^^^^
+// Warning: This pattern always overrides "{Prog}" 
+// ------------------------------------------------
+<ATTR>{
+	[.*\n]+				{; }
+	{AttributeEnd}		{ yy_pop_state(); }
+	<<EOF>>				{ ; /* raise an error. */ }
+}
+
 
 {IntegerLiteral}				{ Int64.TryParse (yytext, NumberStyles.Integer, CultureInfo.CurrentCulture, out yylval.Integer);
 								return (int) Tokens.INTEGER_LITERAL; }
@@ -134,81 +180,22 @@ OpLtEq		"<="
 {BooleanLiteral}				{ if(yytext == "ON") {yylval.Bool =	true;}
 								else {yylval.Bool =	false;}
 								return (int) Tokens.BOOL_LITERAL; }
-
-{ProgramName}					{ yylval.String = yytext; 
-//^^^^^^^^^^^
-// Warning: This pattern always overrides "{Acc}" 
-// Warning: This pattern always overrides "{Skip}" 
-// Warning: This pattern always overrides "{Label}" 
-// Warning: This pattern always overrides "{Sec}" 
-// Warning: This pattern always overrides "{Condition}" 
-// Warning: This pattern always overrides "{Cnt}" 
-// Warning: This pattern always overrides "{Fine}" 
-// Warning: This pattern always overrides "{Offset}" 
-// Warning: This pattern always overrides "{Wjnt}" 
-// Warning: This pattern always overrides "{Else}" 
-// Warning: This pattern always overrides "{Select}" 
-// Warning: This pattern always overrides "{Joint}" 
-// Error: Too many errors, abandoning
-// Warning: This pattern always overrides "{If}" 
-// Warning: This pattern always overrides "{Call}" 
-// Warning: This pattern always overrides "{Jump}" 
-// Warning: This pattern always overrides "{End}" 
-// Warning: This pattern always overrides "{Pulse}" 
-// Warning: This pattern always overrides "{Register}" 
-// Warning: This pattern always overrides "{Dout}" 
-// Warning: This pattern always overrides "{Start}" 
-// Warning: This pattern always overrides "{Weave}" 
-// Warning: This pattern always overrides "{PosRegister}" 
-// Warning: This pattern always overrides "{Arc}" 
-// Warning: This pattern always overrides "{Linear}" 
-// Warning: This pattern always overrides "{Din}" 
-// Warning: This pattern always overrides "{Circular}" 
-// -------------------------------------------------------
-								return (int) Tokens.PROGRAM_NAME; }
+{StringLiteral}					{ if (yytext.Length > 2) { yylval.String = yytext.Substring(1, yytext.Length - 2); }
+									else { yylval.String = ""; }
+								return (int) Tokens.STRING_LITERAL; }
 
 {Joint}		{ return (int) Tokens.JOINT; }
-//^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Linear}	{ return (int) Tokens.LINEAR; }
-//^^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Circular}	{ return (int) Tokens.CIRCULAR; }
-//^^^^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 
 {Arc}		{ return (int) Tokens.ARC; }
-//^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Start}		{ return (int) Tokens.START; }
-//^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Weave}		{ return (int) Tokens.WEAVE; }
-//^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 
 {Register}		{ return (int) Tokens.REGISTER; }
-//^^^^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {PosRegister}	{ return (int) Tokens.POS_REGISTER; }
-//^^^^^^^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Dout}			{ return (int) Tokens.DOUT; }
-//^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Din}			{ return (int) Tokens.DIN; }
-//^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 
 {Percent}		{ return (int) Tokens.PERCENT; }
 {MmSec}			{ return (int) Tokens.MM_SEC; }
@@ -217,66 +204,27 @@ OpLtEq		"<="
 {DegSec}		{ return (int) Tokens.DEG_SEC; }
 
 {Fine}			{ return (int) Tokens.FINE; }
-//^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Cnt}			{ return (int) Tokens.CNT; }
-//^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Wjnt}			{ return (int) Tokens.WJINT; }
-//^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Offset}		{ return (int) Tokens.OFFSET; }
-//^^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Condition}		{ return (int) Tokens.CONDITION; }
-//^^^^^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Skip}			{ return (int) Tokens.SKIP; }
-//^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Acc}			{ return (int) Tokens.ACC; }
-//^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Sec}			{ return (int) Tokens.SEC; }
-//^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Label}			{ return (int) Tokens.LABEL; }
-//^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Jump}			{ return (int) Tokens.JUMP; }
-//^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Call}			{ return (int) Tokens.CALL; }
-//^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Pulse}			{ return (int) Tokens.PULSE; }
-//^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {End}			{ return (int) Tokens.END; }
-//^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {If}			{ return (int) Tokens.IF; }
-//^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Select}		{ return (int) Tokens.SELECT; }
-//^^^^^^
-// Warning: This pattern always overridden by "{ProgramName}" 
-// -----------------------------------------------------------
 {Else}			{ return (int) Tokens.ELSE; }
+{Pos_}			{ return (int) Tokens.POS_; }
+{Main}			{ return (int) Tokens.MAIN; }
+{Prog}			{ return (int) Tokens.PROG; }
+//^^^^
+// Warning: This pattern always overridden by "{AttributeStart}" 
+// --------------------------------------------------------------
 
 {OpAssign}	{ return (int) Tokens.OP_ASSIGN; }
 {OpAdd}		{ return (int) Tokens.OP_ADD; }
@@ -297,6 +245,29 @@ OpLtEq		"<="
 {OpGt}		{ return (int) Tokens.OP_GT; }
 {OpGtEq}	{ return (int) Tokens.OP_GT_EQ; }
 {OpLtEq}	{ return (int) Tokens.OP_LT_EQ; }
+
+{Pos}		{ if(yytext.Contains("\"HOME\"")) { yylval.String = yytext.Replace("\"HOME\"","HOME"); } 
+			return (int) Tokens.POS; }
+{Group}		{ return (int) Tokens.GROUP; }
+{Deg}		{ return (int) Tokens.DEG; }
+{Mm}		{ return (int) Tokens.MM; }
+{Ut}		{ return (int) Tokens.UT; }
+{Uf}		{ return (int) Tokens.UF; }
+{Config}	{ return (int) Tokens.CONFIG; }
+{J1}		{ return (int) Tokens.J1; }
+{J2}		{ return (int) Tokens.J2; }
+{J3}		{ return (int) Tokens.J3; }
+{J4}		{ return (int) Tokens.J4; }
+{J5}		{ return (int) Tokens.J5; }
+{J6}		{ return (int) Tokens.J6; }
+{X}			{ return (int) Tokens.X; }
+{Y}			{ return (int) Tokens.Y; }
+{Z}			{ return (int) Tokens.Z; }
+{W}			{ return (int) Tokens.W; }
+{P}			{ return (int) Tokens.P; }
+
+{ProgramName}					{ yylval.String = yytext; 
+								return (int) Tokens.PROGRAM_NAME; }
 
 
 

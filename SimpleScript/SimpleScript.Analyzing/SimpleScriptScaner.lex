@@ -11,7 +11,9 @@ public void yyerror(string format, params object[] args) // remember to add over
 }
 %}
 // Single comments
-LineComment	!.*
+LineComment		!.*
+AttributeStart	\/PROG
+AttributeEnd	\/MN
 
 //Base Definitions
 D		[0-9]
@@ -65,7 +67,7 @@ Select		SELECT
 Else		ELSE
 Prog		/PROG
 Main		/MN
-Pos			/POS
+Pos_		/POS
 End			/END
 
 //speed
@@ -99,7 +101,6 @@ OpGtEq		">="
 OpLtEq		"<="
 
 //POS
-Home		HOME
 Pos			P\[{D}+.*\]
 Group		GP1
 Deg			deg
@@ -125,7 +126,7 @@ P			P
 
 // The states into which this FSA can pass.
 %x CMMT		// Inside a comment.
-%x CMMT2
+%x ATTR
 %%
 
 //
@@ -138,6 +139,9 @@ P			P
 
 // End of Line (Haven't yet figured it how to do this :-) )
 {Eol}+		{ return (int) Tokens.EOL; }
+{Semi}		{ return (int) Tokens.SEMI; }
+{Colon}		{ return (int) Tokens.COLON; }
+{Comma}		{ return (int) Tokens.COMMA; }
 
 // Remove these lines 
 // TODO: show these lines
@@ -145,7 +149,12 @@ P			P
 <CMMT>{
 {Eol} { yy_pop_state ();}
 }
-
+{AttributeStart}					{  yy_push_state (ATTR); }
+<ATTR>{
+	[.*\n]+				{; }
+	{AttributeEnd}		{ yy_pop_state(); return (int) Tokens.BEGIN; }
+	<<EOF>>				{ ; /* raise an error. */ }
+}
 
 
 {IntegerLiteral}				{ Int64.TryParse (yytext, NumberStyles.Integer, CultureInfo.CurrentCulture, out yylval.Integer);
@@ -192,10 +201,13 @@ P			P
 {Jump}			{ return (int) Tokens.JUMP; }
 {Call}			{ return (int) Tokens.CALL; }
 {Pulse}			{ return (int) Tokens.PULSE; }
-{End}			{ return (int) Tokens.END; }
 {If}			{ return (int) Tokens.IF; }
 {Select}		{ return (int) Tokens.SELECT; }
 {Else}			{ return (int) Tokens.ELSE; }
+{Pos_}			{ return (int) Tokens.POS_; }
+{Main}			{ return (int) Tokens.MAIN; }
+{Prog}			{ return (int) Tokens.PROG; }
+{End}			{ return (int) Tokens.END; }
 
 {OpAssign}	{ return (int) Tokens.OP_ASSIGN; }
 {OpAdd}		{ return (int) Tokens.OP_ADD; }
@@ -216,8 +228,28 @@ P			P
 {OpGt}		{ return (int) Tokens.OP_GT; }
 {OpGtEq}	{ return (int) Tokens.OP_GT_EQ; }
 {OpLtEq}	{ return (int) Tokens.OP_LT_EQ; }
-{Pos}		{if(yytext.Contains("\"HOME\"")) { yylval.String = yytext.Replace("\"HOME\"","HOME"); } 
-			return (int) Tokens.Pos; }
+{LeftBig}	{ return (int) Tokens.OP_LEFT_BIG; }
+{RightBig}	{ return (int) Tokens.OP_RIGHT_BIG; }
+
+{Pos}		{ if(yytext.Contains("\"HOME\"")) { yylval.String = yytext.Replace("\"HOME\"","HOME"); } 
+			return (int) Tokens.POS; }
+{Group}		{ return (int) Tokens.GROUP; }
+{Deg}		{ return (int) Tokens.DEG; }
+{Mm}		{ return (int) Tokens.MM; }
+{Ut}		{ return (int) Tokens.UT; }
+{Uf}		{ return (int) Tokens.UF; }
+{Config}	{ return (int) Tokens.CONFIG; }
+{J1}		{ return (int) Tokens.J1; }
+{J2}		{ return (int) Tokens.J2; }
+{J3}		{ return (int) Tokens.J3; }
+{J4}		{ return (int) Tokens.J4; }
+{J5}		{ return (int) Tokens.J5; }
+{J6}		{ return (int) Tokens.J6; }
+{X}			{ return (int) Tokens.X; }
+{Y}			{ return (int) Tokens.Y; }
+{Z}			{ return (int) Tokens.Z; }
+{W}			{ return (int) Tokens.W; }
+{P}			{ return (int) Tokens.P; }
 
 {ProgramName}					{ yylval.String = yytext; 
 								return (int) Tokens.PROGRAM_NAME; }
