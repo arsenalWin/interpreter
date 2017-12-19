@@ -131,9 +131,16 @@ statementList	:	/*Empty*/	{if($$.statementList == null)	{$$.statementList = new 
 			
 //运动指令 焊接指令 I/O指令 LABEL指令 JUMP指令 CALL指令 IF指令 SELECT指令 WAIT指令 OFFSET指令 PAUSE指令
 statement	:	moveStatement		{ $$.statement = $1.statement; }
+			|	labelStatement		{ $$.statement = $1.statement; }
+			|	jmpStatement		{ $$.statement = $1.statement; }
+			|	ifStatement			{ $$.statement = $1.statement; }
+			|	SEMI
 			;
 
-moveStatement	:	JOINT POS moveSpeed moveFine SEMI	{$$.statement = new MoveStatement(MoveTypes.Joint, $2, $3.moveSpeed);}
+moveStatement	:	INTEGER_LITERAL COLON JOINT POS moveSpeed moveFine SEMI	{$$.statement = new MoveStatement(MoveTypes.Joint, $4, $5.moveSpeed);}
+				|	INTEGER_LITERAL COLON LINEAR POS moveSpeed moveFine SEMI	{$$.statement = new MoveStatement(MoveTypes.Linear, $4, $5.moveSpeed);}
+				|	INTEGER_LITERAL COLON CIRCULAR POS EOL
+					COLON POS moveSpeed moveFine SEMI	{$$.statement = new MoveStatement(MoveTypes.Linear, $4, $5.moveSpeed);}
 				;
 
 moveSpeed		:	INTEGER_LITERAL PERCENT	{$$.moveSpeed = new MoveSpeed($1, "percent");}
@@ -145,7 +152,15 @@ moveSpeed		:	INTEGER_LITERAL PERCENT	{$$.moveSpeed = new MoveSpeed($1, "percent"
 
 moveFine		:	FINE
 				;
-				
+
+labelStatement	:	INTEGER_LITERAL COLON LABEL OP_LEFT_BRA INTEGER_LITERAL OP_RIGHT_BRA SEMI	{//ToDo: 存储label变量}
+				;
+
+jmpStatement	:	INTEGER_LITERAL COLON JMP LABEL SEMI	{//ToDo: jmp statement}
+				;
+
+ifStatement		:	INTEGER_LITERAL COLON IF expr COMMA JMP LABEL SEMI	{//ToDo: if statement}
+				;
 
 posInfoList	:	/*Empty*/
 			|	posInfo
